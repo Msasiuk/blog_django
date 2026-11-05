@@ -6,7 +6,7 @@ Blog web desarrollado con Django en el curso de Python de Coderhouse.
 
 Este repositorio contiene la estructura inicial del blog web. Es la continuación del blog por consola de las preentregas anteriores, ahora como aplicación web con Django.
 
-En esta versión (Preentrega 7) se creó el proyecto Django `blog_project` y la aplicación `posts`, con la configuración regional en español. Todavía no tiene modelos, vistas ni templates propios: esos se agregan en las próximas etapas.
+En esta versión (Preentrega 8) se agregaron templates con herencia (`base.html`), las páginas de inicio y “Acerca de”, rutas propias de la app y estilos CSS.
 
 ## Requisitos
 
@@ -71,11 +71,13 @@ En esta versión (Preentrega 7) se creó el proyecto Django `blog_project` y la 
 
 2. Abrir en el navegador:
 
-   ```
-   http://127.0.0.1:8000/
-   ```
+   | Página | URL |
+   |---|---|   
+   | Inicio | http://127.0.0.1:8000/ |
+   | Acerca de | http://127.0.0.1:8000/acerca/ |
 
-   Tiene que aparecer la página de bienvenida de Django en español: "La instalación ha sido exitosa. ¡Felicitaciones!".
+
+   Desde el menú superior se puede navegar entre las dos páginas.
 
 3. Para detener el servidor, presionar `Ctrl + C` en la terminal.
 
@@ -106,7 +108,19 @@ blog_django/
     │   └── __init__.py
     ├── models.py
     ├── tests.py
-    └── views.py
+    ├── urls.py    
+    ├── views.py
+    │
+    ├── templates/
+    │   └── posts/
+    │       ├── base.html
+    │       ├── inicio.html
+    │       └── acerca.html
+    │
+    └── static/
+        └── posts/
+            └── css/
+                └── estilos.css
 ```
 
 | Archivo o carpeta | Para qué sirve |
@@ -118,6 +132,12 @@ blog_django/
 | `posts/` | Aplicación principal del blog. |
 | `requirements.txt` | Dependencias del proyecto, generadas con `pip freeze > requirements.txt`. |
 | `.gitignore` | Archivos y carpetas que Git no sube al repositorio. |
+| `posts/urls.py` | Rutas de la app: inicio (`''`) y acerca de (`acerca/`). |
+| `posts/views.py` | Vistas `inicio()` y `acerca()`, que devuelven templates con `render()`. |
+| `posts/templates/posts/base.html` | Layout común: estructura HTML5, menú, pie y enlace al CSS. Define el bloque `content`. |
+| `posts/templates/posts/inicio.html` | Página de inicio. Extiende de `base.html`. |
+| `posts/templates/posts/acerca.html` | Página "Acerca de". Extiende de `base.html`. |
+| `posts/static/posts/css/estilos.css` | Estilos del sitio. |
 
 ## Aplicaciones
 
