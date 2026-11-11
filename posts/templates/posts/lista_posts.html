@@ -1,0 +1,21 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}Posts | Mi Blog{% endblock %}
+
+{% block content %}
+<h2>Publicaciones</h2>
+
+{% for post in posts %}
+<article class="seccion post">
+    <h3>{{ post.titulo }}</h3>
+    <p class="post-meta">
+        Por {{ post.autor }} · {{ post.fecha_creacion|date:"d/m/Y H:i" }} · {{ post.get_estado_display }}
+    </p>
+    <div class="post-contenido">
+        {{ post.contenido|linebreaks }}
+    </div>
+</article>
+{% empty %}
+<p class="seccion">Todavía no hay publicaciones.</p>
+{% endfor %}
+{% endblock %}

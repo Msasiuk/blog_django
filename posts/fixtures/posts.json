@@ -1,0 +1,46 @@
+[
+{
+  "model": "posts.post",
+  "pk": 1,
+  "fields": {
+    "titulo": "Mi primer post en Django",
+    "contenido": "¡Hola! Este es el primer post de mi blog hecho con Django.\r\n\r\nHasta hace poco, este proyecto era un programa de consola: los posts se guardaban en un archivo JSON y se manejaban desde un menú en la terminal. Ahora viven en una base de datos SQLite y los cargo desde el panel de administración.\r\n\r\nLo más interesante es que no tuve que escribir ni una línea de SQL: el ORM de Django se encarga de todo.",
+    "autor": "Gabriela M. Sasiuk",
+    "fecha_creacion": "2026-11-11T19:44:35.002Z",
+    "estado": "publicado"
+  }
+},
+{
+  "model": "posts.post",
+  "pk": 2,
+  "fields": {
+    "titulo": "Del programa de consola a la web",
+    "contenido": "Este blog empezó como un programa de consola en Python: un menú en la terminal para crear, listar, buscar y eliminar posts, que se guardaban en un archivo JSON.\r\n\r\nMódulo a módulo fue creciendo: primero con listas y diccionarios, después con funciones y validaciones, más tarde organizado en paquetes y finalmente con clases y objetos.\r\n\r\nAhora da el salto a la web con Django: tiene páginas, estilos, un panel de administración y una base de datos real. La lógica es parecida, pero el resultado se puede ver desde cualquier navegador.",
+    "autor": "Gabriela M. Sasiuk",
+    "fecha_creacion": "2026-11-11T19:46:35.141Z",
+    "estado": "publicado"
+  }
+},
+{
+  "model": "posts.post",
+  "pk": 3,
+  "fields": {
+    "titulo": "Ideas para próximos posts",
+    "contenido": "Algunos temas que quiero escribir más adelante:\r\n\r\n- Qué es un modelo en Django y cómo se relaciona con la POO.\r\n- Cómo funcionan las migraciones.\r\n- Primeros pasos con análisis de datos usando pandas.",
+    "autor": "Gabriela M. Sasiuk",
+    "fecha_creacion": "2026-11-11T19:46:59.369Z",
+    "estado": "borrador"
+  }
+},
+{
+  "model": "posts.post",
+  "pk": 4,
+  "fields": {
+    "titulo": "Un post viejo",
+    "contenido": "Este post queda archivado como ejemplo: no se muestra en el sitio, pero sigue guardado en la base de datos y se puede ver desde el panel de administración.\r\n\r\nArchivar sirve para sacar de circulación una publicación sin perderla.",
+    "autor": "Gabriela M. Sasiuk",
+    "fecha_creacion": "2026-11-11T19:47:25.501Z",
+    "estado": "archivado"
+  }
+}
+]

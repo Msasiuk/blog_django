@@ -4,9 +4,14 @@ Blog web desarrollado con Django en el curso de Python de Coderhouse.
 
 ## Descripción
 
-Este repositorio contiene la estructura inicial del blog web. Es la continuación del blog por consola de las preentregas anteriores, ahora como aplicación web con Django.
+Este repositorio contiene el blog web. Es la continuación del blog por consola de las preentregas anteriores, ahora como aplicación web con Django.
 
-En esta versión (Preentrega 8) se agregaron templates con herencia (`base.html`), las páginas de inicio y “Acerca de”, rutas propias de la app y estilos CSS.
+En esta versión (Preentrega 9) el blog se conecta con una base de datos SQLite usando el ORM de Django. Se agregaron:
+
+- El modelo `Post` (título, contenido, autor, fecha de creación y estado).
+- El registro del modelo en el panel de administración, con columnas, filtros y búsqueda.
+- La página `/posts/`, que lista las publicaciones con estado "Publicado" obtenidas desde la base de datos.
+- Las últimas 3 publicaciones en la página de inicio.
 
 ## Requisitos
 
@@ -74,14 +79,44 @@ En esta versión (Preentrega 8) se agregaron templates con herencia (`base.html`
    | Página | URL |
    |---|---|   
    | Inicio | http://127.0.0.1:8000/ |
+   | Posts | http://127.0.0.1:8000/posts/ |
    | Acerca de | http://127.0.0.1:8000/acerca/ |
+   | Panel admin | http://127.0.0.1:8000/admin/ |
 
 
-   Desde el menú superior se puede navegar entre las dos páginas.
+   Desde el menú superior se puede navegar entre las páginas.
 
 3. Para detener el servidor, presionar `Ctrl + C` en la terminal.
 
-Al levantar el servidor aparece un aviso en rojo: *"You have 18 unapplied migration(s)"*. No es un error: indica que todavía no se creó la base de datos. Para crearla se puede ejecutar `python manage.py migrate`, que genera el archivo `db.sqlite3` (ese archivo no se sube al repositorio).
+## Base de datos
+
+Antes del primer uso hay que crear la base de datos:
+
+```
+python manage.py migrate
+```
+
+Esto genera el archivo `db.sqlite3` con todas las tablas. Ese archivo no se sube al repositorio: cada persona lo crea en su computadora.
+
+Para cargar los posts de ejemplo (opcional):
+
+```
+python manage.py loaddata posts
+```
+
+## Panel de administración
+
+1. Crear un usuario administrador:
+
+   ```
+   python manage.py createsuperuser
+   ```
+
+   Pide nombre de usuario, email (opcional) y contraseña. La contraseña no se ve mientras se escribe.
+
+2. Levantar el servidor y entrar a http://127.0.0.1:8000/admin/ con ese usuario.
+
+3. En **Posts** se pueden crear, editar y eliminar publicaciones. Solo las que tienen estado **Publicado** se muestran en el sitio.
 
 ## Estructura del proyecto
 
@@ -104,8 +139,12 @@ blog_django/
     ├── __init__.py
     ├── admin.py
     ├── apps.py
+    ├── fixtures/
+    │   └── posts.json
     ├── migrations/
-    │   └── __init__.py
+    │   ├── __init__.py
+    │   ├── 0001_initial.py
+    │   └── 0002_alter_post_titulo.py
     ├── models.py
     ├── tests.py
     ├── urls.py    
@@ -115,6 +154,7 @@ blog_django/
     │   └── posts/
     │       ├── base.html
     │       ├── inicio.html
+    │       ├── lista_posts.html
     │       └── acerca.html
     │
     └── static/
@@ -132,12 +172,17 @@ blog_django/
 | `posts/` | Aplicación principal del blog. |
 | `requirements.txt` | Dependencias del proyecto, generadas con `pip freeze > requirements.txt`. |
 | `.gitignore` | Archivos y carpetas que Git no sube al repositorio. |
-| `posts/urls.py` | Rutas de la app: inicio (`''`) y acerca de (`acerca/`). |
-| `posts/views.py` | Vistas `inicio()` y `acerca()`, que devuelven templates con `render()`. |
+| `posts/urls.py` | Rutas de la app: inicio (`''`), posts (`posts/`) y acerca de (`acerca/`). |
+| `posts/views.py` | Vistas `inicio()`, `lista_posts()` y `acerca()`Las dos primeras consultan la base con el ORM. |
 | `posts/templates/posts/base.html` | Layout común: estructura HTML5, menú, pie y enlace al CSS. Define el bloque `content`. |
 | `posts/templates/posts/inicio.html` | Página de inicio. Extiende de `base.html`. |
 | `posts/templates/posts/acerca.html` | Página "Acerca de". Extiende de `base.html`. |
 | `posts/static/posts/css/estilos.css` | Estilos del sitio. |
+| `posts/models.py` | Modelo `Post`: define la tabla de publicaciones en la base de datos. |
+| `posts/admin.py` | Registro del modelo en el panel admin (`PostAdmin`). |
+| `posts/migrations/` | Migraciones que crean y actualizan la tabla de posts. |
+| `posts/templates/posts/lista_posts.html` | Listado de posts publicados, recorridos con `{% for %}`. |
+| `posts/fixtures/posts.json` | Posts de ejemplo para cargar con `loaddata`. |
 
 ## Aplicaciones
 
@@ -158,6 +203,7 @@ El `.gitignore` excluye:
 - `__pycache__/` y `*.pyc`: archivos que Python genera automáticamente.
 - `.env`: archivo para variables privadas (contraseñas, claves).
 - `db.sqlite3`: la base de datos local que genera Django.
+- `db.sqlite3`: la base de datos local que genera Django. Se recrea con `migrate`, y los posts de ejemplo con `loaddata posts`.
 
 ## Dependencias
 
