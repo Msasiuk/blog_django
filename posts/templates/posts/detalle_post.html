@@ -1,0 +1,29 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}{{ post.titulo }} | Mi Blog{% endblock %}
+
+{% block content %}
+<article class="seccion">
+    <h2>{{ post.titulo }}</h2>
+    <p class="post-meta">
+        Por {{ post.autor }} · {{ post.fecha_creacion|date:"d/m/Y H:i" }} ·
+        <span class="estado estado-{{ post.estado }}">{{ post.get_estado_display }}</span>
+    </p>
+
+    {% if post.imagen %}
+    <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" class="post-imagen">
+    {% else %}
+    <p class="sin-imagen">Este post no tiene imagen.</p>
+    {% endif %}
+
+    <div class="post-contenido">
+        {{ post.contenido|linebreaks }}
+    </div>
+
+    <div class="acciones">
+        <a href="{% url 'posts:editar_post' post.pk %}" class="boton">Editar</a>
+        <a href="{% url 'posts:eliminar_post' post.pk %}" class="boton boton-peligro">Eliminar</a>
+        <a href="{% url 'posts:lista_posts' %}">← Volver al listado</a>
+    </div>
+</article>
+{% endblock %}

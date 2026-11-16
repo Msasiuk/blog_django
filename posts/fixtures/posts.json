@@ -7,7 +7,8 @@
     "contenido": "¡Hola! Este es el primer post de mi blog hecho con Django.\r\n\r\nHasta hace poco, este proyecto era un programa de consola: los posts se guardaban en un archivo JSON y se manejaban desde un menú en la terminal. Ahora viven en una base de datos SQLite y los cargo desde el panel de administración.\r\n\r\nLo más interesante es que no tuve que escribir ni una línea de SQL: el ORM de Django se encarga de todo.",
     "autor": "Gabriela M. Sasiuk",
     "fecha_creacion": "2026-11-11T19:44:35.002Z",
-    "estado": "publicado"
+    "estado": "publicado",
+    "imagen": ""
   }
 },
 {
@@ -18,7 +19,8 @@
     "contenido": "Este blog empezó como un programa de consola en Python: un menú en la terminal para crear, listar, buscar y eliminar posts, que se guardaban en un archivo JSON.\r\n\r\nMódulo a módulo fue creciendo: primero con listas y diccionarios, después con funciones y validaciones, más tarde organizado en paquetes y finalmente con clases y objetos.\r\n\r\nAhora da el salto a la web con Django: tiene páginas, estilos, un panel de administración y una base de datos real. La lógica es parecida, pero el resultado se puede ver desde cualquier navegador.",
     "autor": "Gabriela M. Sasiuk",
     "fecha_creacion": "2026-11-11T19:46:35.141Z",
-    "estado": "publicado"
+    "estado": "publicado",
+    "imagen": ""
   }
 },
 {
@@ -29,7 +31,8 @@
     "contenido": "Algunos temas que quiero escribir más adelante:\r\n\r\n- Qué es un modelo en Django y cómo se relaciona con la POO.\r\n- Cómo funcionan las migraciones.\r\n- Primeros pasos con análisis de datos usando pandas.",
     "autor": "Gabriela M. Sasiuk",
     "fecha_creacion": "2026-11-11T19:46:59.369Z",
-    "estado": "borrador"
+    "estado": "borrador",
+    "imagen": ""
   }
 },
 {
@@ -40,7 +43,20 @@
     "contenido": "Este post queda archivado como ejemplo: no se muestra en el sitio, pero sigue guardado en la base de datos y se puede ver desde el panel de administración.\r\n\r\nArchivar sirve para sacar de circulación una publicación sin perderla.",
     "autor": "Gabriela M. Sasiuk",
     "fecha_creacion": "2026-11-11T19:47:25.501Z",
-    "estado": "archivado"
+    "estado": "archivado",
+    "imagen": ""
+  }
+},
+{
+  "model": "posts.post",
+  "pk": 5,
+  "fields": {
+    "titulo": "Las mejores herramientas para programar contenido en Redes Sociales",
+    "contenido": "En este post he recopilado lo que para mí son las mejores herramientas programar publicaciones en Instagram y otras Redes Sociales. Esta selección te ayudará a la hora de gestionar mejor tu tiempo, tus viajes o tus vacaciones.\r\n\r\nAunque muchas de estas aplicaciones tienen una parte premium, muchas de ellas también son recursos gratuitos que te van a ayudar a gestionar tus publicaciones en las distintas Redes Sociales de manera más sencilla y cómoda que si tuvieras que hacer todas las publicaciones directamente a mano.\r\n\r\nComo bien sabes, publicar con estrategia en Redes Sociales es algo completamente necesario si quieres conseguir que una empresa o tu propia marca personal crezca y genere nuevas oportunidades profesionales e ingresos. Pero también requieren un esfuerzo y constancia que no siempre podemos dedicarles por motivos de trabajo, por asuntos familiares, o simplemente porque el día a día de cada uno de nosotros es complicado.\r\n\r\nEl objetivo de este artículo es ofrecerte un listado con las mejores herramientas de programación y planificación de contenidos en Redes Sociales. Y con ellas, muchas posibilidades y soluciones  para publicar estratégicamente el contenido de tu marca en los mejores días y horarios de tu audiencia.\r\n\r\nLa idea es ofrecerte herramientas y aplicaciones que te permitan publicar frecuentemente, de manera sencilla e invirtiendo poco tiempo y dinero. ¿Bien no?",
+    "autor": "Fernando Rubio",
+    "fecha_creacion": "2026-11-16T22:29:10.463Z",
+    "estado": "publicado",
+    "imagen": "posts/herramientas-programacion-rrss.png"
   }
 }
 ]

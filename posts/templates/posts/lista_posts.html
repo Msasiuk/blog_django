@@ -3,17 +3,24 @@
 {% block title %}Posts | Mi Blog{% endblock %}
 
 {% block content %}
-<h2>Publicaciones</h2>
+<div class="encabezado-lista">
+    <h2>Publicaciones</h2>
+    <a href="{% url 'posts:crear_post' %}" class="boton">+ Nuevo post</a>
+</div>
 
 {% for post in posts %}
 <article class="seccion post">
-    <h3>{{ post.titulo }}</h3>
+    {% if post.imagen %}
+    <a href="{% url 'posts:detalle_post' post.pk %}">
+        <img src="{{ post.imagen.url }}" alt="{{ post.titulo }}" class="post-miniatura">
+    </a>
+    {% endif %}
+    <h3><a href="{% url 'posts:detalle_post' post.pk %}">{{ post.titulo }}</a></h3>
     <p class="post-meta">
         Por {{ post.autor }} · {{ post.fecha_creacion|date:"d/m/Y H:i" }} · {{ post.get_estado_display }}
     </p>
-    <div class="post-contenido">
-        {{ post.contenido|linebreaks }}
-    </div>
+    <p>{{ post.contenido|truncatewords:40 }}</p>
+    <a href="{% url 'posts:detalle_post' post.pk %}">Leer más →</a>
 </article>
 {% empty %}
 <p class="seccion">Todavía no hay publicaciones.</p>

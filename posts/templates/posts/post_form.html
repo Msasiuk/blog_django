@@ -1,0 +1,22 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}{{ titulo_pagina }} | Mi Blog{% endblock %}
+
+{% block content %}
+<section class="seccion">
+    <h2>{{ titulo_pagina }}</h2>
+
+    <form method="post" enctype="multipart/form-data" class="formulario">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="acciones">
+            <button type="submit" class="boton">{{ texto_boton }}</button>
+            {% if post %}
+            <a href="{% url 'posts:detalle_post' post.pk %}">Cancelar</a>
+            {% else %}
+            <a href="{% url 'posts:lista_posts' %}">Cancelar</a>
+            {% endif %}
+        </div>
+    </form>
+</section>
+{% endblock %}
