@@ -6,11 +6,11 @@ Blog web desarrollado con Django en el curso de Python de Coderhouse.
 
 Este repositorio contiene el blog web. Es la continuación del blog por consola de las preentregas anteriores, ahora como aplicación web con Django.
 
-En esta versión (Preentrega 10) se agregó la gestión de publicaciones desde el propio sitio (CRUD completo) e imagen opcional para cada post.
+En esta versión (Preentrega 11) se agregaron usuarios con registro, inicio y cierre de sesión, perfil con biografía y avatar, y protección de las acciones de crear, editar y borrar posts.
 
 ## Requisitos
 
-- Python 3.12 o superior (Django 6.1 no funciona con versiones anteriores).
+- Python 3.12 o superior (Django 6.1 no funciona con versiones anteriores). Para verificar la versión instalada: `python --version`
 - Git, para clonar el repositorio.
 
 ## Instalación
@@ -96,6 +96,9 @@ python manage.py loaddata posts
    | Detalle de un post | http://127.0.0.1:8000/posts/1/ |   
    | Acerca de | http://127.0.0.1:8000/acerca/ |
    | Panel admin | http://127.0.0.1:8000/admin/ |
+   | Registrarse | http://127.0.0.1:8000/accounts/registro/ |
+   | Iniciar sesión | http://127.0.0.1:8000/accounts/login/ |
+   | Mi perfil | http://127.0.0.1:8000/accounts/perfil/ |
 
    Desde el menú superior se puede navegar entre las páginas.
 
@@ -143,6 +146,84 @@ Cada post puede tener una imagen opcional.
 4. La imagen queda guardada en la carpeta `media/posts/`.
 5. Para cambiarla: **Editar** → elegir otra imagen → **Guardar cambios**. Para quitarla: tildar **Limpiar**.
 
+## Usuarios y perfiles
+
+La app `accounts` maneja todo lo relacionado con usuarios. Usa el sistema de autenticación de Django (`django.contrib.auth`).
+
+### Registro
+
+En **Registrarse** (`/accounts/registro/`) se completa usuario, email, nombre, apellido y contraseña (dos veces). El formulario `RegistroForm` (en `accounts/forms.py`) hereda de `UserCreationForm` y le agrega email, nombre y apellido.
+
+Al registrarse, la vista `registro`:
+
+1. Guarda el usuario.
+2. Crea su perfil con `Perfil.objects.create(user=usuario)`.
+3. Inicia la sesión automáticamente y redirige a **Mi perfil**.
+
+> Se eligió crear el perfil desde la vista de registro (como pide la consigna) en lugar de usar *signals*. Para los usuarios creados antes de existir el modelo (como el superusuario), las vistas de perfil usan `Perfil.objects.get_or_create(user=request.user)`, que crea el perfil si todavía no existe.
+
+### Iniciar y cerrar sesión
+
+- **Iniciar sesión:** en `/accounts/login/`, con la vista `LoginView` de Django. Si se llega desde una página protegida, después de ingresar se vuelve a esa página.
+- **Cerrar sesión:** con el botón **Cerrar sesión** del menú, que usa `LogoutView`. Es un formulario POST (Django no permite cerrar sesión con un link GET) y redirige al listado de posts.
+- **Cambiar contraseña:** desde **Mi perfil** → "Cambiar contraseña" (`PasswordChangeView`).
+
+Las redirecciones están configuradas en `settings.py`:
+
+```python
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'posts:lista_posts'
+LOGOUT_REDIRECT_URL = 'posts:lista_posts'
+```
+
+### Modelo Perfil
+
+En `accounts/models.py`:
+
+```python
+class Perfil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="perfil")
+    biografia = models.TextField("Biografía", blank=True)
+    link_web = models.URLField("Sitio web", blank=True)
+    avatar = models.ImageField(upload_to="avatares/", null=True, blank=True)
+```
+
+- `OneToOneField`: cada usuario tiene un único perfil. Si se borra el usuario, se borra su perfil (`CASCADE`).
+- Está registrado en el admin (`PerfilAdmin`), en **Perfiles**.
+- Desde **Mi perfil** → **Editar perfil** se modifican nombre, apellido, email, biografía, sitio web y avatar.
+
+### Avatares
+
+- Se guardan en `media/avatares/`, usando la misma configuración de `MEDIA_URL` y `MEDIA_ROOT` que las imágenes de los posts.
+- El formulario de edición usa `enctype="multipart/form-data"` y la vista pasa `request.FILES` a `PerfilForm`.
+- Si el usuario no tiene avatar, el perfil muestra un círculo con su inicial.
+- `media/avatares/` está en `.gitignore`: son imágenes personales de cada usuario y no se suben al repositorio.
+
+### Rutas protegidas
+
+Estas vistas requieren haber iniciado sesión (`@login_required`). Si no, redirigen a `/accounts/login/?next=<página>`:
+
+| Vista | URL |
+|---|---|
+| `crear_post` | `/posts/crear/` |
+| `editar_post` | `/posts/<id>/editar/` |
+| `eliminar_post` | `/posts/<id>/eliminar/` |
+| `perfil` | `/accounts/perfil/` |
+| `editar_perfil` | `/accounts/perfil/editar/` |
+| `PasswordChangeView` | `/accounts/password/` |
+
+El listado (`/posts/`) y el detalle (`/posts/<id>/`) siguen siendo públicos. El menú también cambia: los visitantes ven "Iniciar sesión" y "Registrarse"; los usuarios ven "Crear post", "Mi perfil", "Cerrar sesión" y un saludo.
+
+## Tests
+
+El proyecto incluye pruebas automáticas en `accounts/tests.py`, que verifican el registro (con la creación del perfil), la protección de las rutas y el acceso público al listado y al detalle:
+
+```
+python manage.py test
+```
+
+Usan una base de datos temporal, así que no modifican los datos reales.
+
 ## Panel de administración
 
 1. Crear un usuario administrador:
@@ -178,37 +259,58 @@ blog_django/
 │   └── posts/
 │       └── herramientas-programacion-rrss.png
 │
-└── posts/
+├── posts/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── fixtures/
+│   │   └── posts.json
+│   ├── migrations/
+│   │   ├── __init__.py
+│   │   ├── 0001_initial.py
+│   │   ├── 0002_alter_post_titulo.py
+│   │   └── 0003_post_imagen.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py    
+│   ├── views.py
+│   │
+│   ├── templates/
+│   │   └── posts/
+│   │       ├── base.html
+│   │       ├── inicio.html
+│   │       ├── acerca.html
+│   │       ├── lista_posts.html
+│   │       ├── detalle_post.html
+│   │       ├── post_form.html
+│   │       └── post_confirm_delete.html
+│   │
+│   └── static/
+│       └── posts/
+│           └── css/
+│               └── estilos.css
+│
+└── accounts/
     ├── __init__.py
     ├── admin.py
     ├── apps.py
     ├── forms.py
-    ├── fixtures/
-    │   └── posts.json
     ├── migrations/
     │   ├── __init__.py
-    │   ├── 0001_initial.py
-    │   ├── 0002_alter_post_titulo.py
-    │   └── 0003_post_imagen.py
+    │   └── 0001_initial.py
     ├── models.py
     ├── tests.py
-    ├── urls.py    
+    ├── urls.py
     ├── views.py
-    │
-    ├── templates/
-    │   └── posts/
-    │       ├── base.html
-    │       ├── inicio.html
-    │       ├── acerca.html
-    │       ├── lista_posts.html
-    │       ├── detalle_post.html
-    │       ├── post_form.html
-    │       └── post_confirm_delete.html
-    │
-    └── static/
-        └── posts/
-            └── css/
-                └── estilos.css
+    └── templates/
+        └── accounts/
+            ├── login.html
+            ├── registro.html
+            ├── perfil.html
+            ├── editar_perfil.html
+            ├── password_change.html
+            └── password_change_done.html
 ```
 
 | Archivo o carpeta | Para qué sirve |
@@ -234,15 +336,23 @@ blog_django/
 | `posts/static/posts/css/estilos.css` | Estilos del sitio. |
 | `requirements.txt` | Dependencias del proyecto. |
 | `.gitignore` | Archivos y carpetas que Git no sube al repositorio. |
+| `accounts/models.py` | Modelo `Perfil` (relación `OneToOneField` con `User`). |
+| `accounts/forms.py` | `RegistroForm` (basado en `UserCreationForm`), `UsuarioForm` y `PerfilForm`. |
+| `accounts/views.py` | Vistas de registro, perfil y edición de perfil. |
+| `accounts/urls.py` | Rutas de login, logout, registro, perfil y cambio de contraseña. |
+| `accounts/admin.py` | Registro de `Perfil` en el admin. |
+| `accounts/tests.py` | Tests automáticos de registro y rutas protegidas. |
+| `accounts/templates/accounts/` | Templates de login, registro, perfil, edición de perfil y cambio de contraseña. |
 
 ## Configuración
 
 En `blog_project/settings.py` se configuró:
 
-- **Aplicación:** `posts` registrada en `INSTALLED_APPS` como `'posts.apps.PostsConfig'`.
+- **Aplicaciones:** `posts` (`'posts.apps.PostsConfig'`) y `accounts` (`'accounts.apps.AccountsConfig'`), registradas en `INSTALLED_APPS`.
 - **Idioma:** `LANGUAGE_CODE = 'es-ar'` (español de Argentina).
 - **Zona horaria:** `TIME_ZONE = 'America/Argentina/Buenos_Aires'`.
 - **Archivos media:** `MEDIA_URL` y `MEDIA_ROOT` (ver "Manejo de imágenes").
+- **Autenticación:** `LOGIN_URL`, `LOGIN_REDIRECT_URL` y `LOGOUT_REDIRECT_URL` (ver "Usuarios y perfiles").
 
 ## Archivos que no se suben al repositorio
 
@@ -252,6 +362,7 @@ El `.gitignore` excluye:
 - `__pycache__/` y `*.pyc`: archivos que Python genera automáticamente.
 - `.env`: archivo para variables privadas (contraseñas, claves).
 - `db.sqlite3`: la base de datos local que genera Django. Se recrea con `migrate`, y los posts de ejemplo con `loaddata posts`.
+- `media/avatares/`: avatares que suben los usuarios (imágenes personales).
 
 La carpeta `media/posts/` **sí** se sube, porque contiene la imagen del post de ejemplo del fixture.
 

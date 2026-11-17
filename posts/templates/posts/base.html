@@ -15,8 +15,20 @@
         <nav class="menu">
             <a href="{% url 'posts:inicio' %}">Inicio</a>
             <a href="{% url 'posts:lista_posts' %}">Posts</a>
-            <a href="{% url 'posts:crear_post' %}">Nuevo post</a>
             <a href="{% url 'posts:acerca' %}">Acerca de</a>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'posts:crear_post' %}">Crear post</a>
+            <a href="{% url 'accounts:perfil' %}">Mi perfil</a>
+            <form action="{% url 'accounts:logout' %}" method="post" class="form-logout">
+                {% csrf_token %}
+                <button type="submit">Cerrar sesión</button>
+            </form>
+            <span class="saludo">Hola, {{ user.username }}</span>
+            {% else %}
+            <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
+            <a href="{% url 'accounts:registro' %}">Registrarse</a>
+            {% endif %}
         </nav>
     </header>
 

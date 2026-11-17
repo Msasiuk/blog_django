@@ -1,0 +1,21 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}Editar perfil | Mi Blog{% endblock %}
+
+{% block content %}
+<section class="seccion">
+    <h2>Editar perfil</h2>
+
+    <form method="post" enctype="multipart/form-data" class="formulario">
+        {% csrf_token %}
+        <h3>Datos personales</h3>
+        {{ usuario_form.as_p }}
+        <h3>Perfil</h3>
+        {{ perfil_form.as_p }}
+        <div class="acciones">
+            <button type="submit" class="boton">Guardar cambios</button>
+            <a href="{% url 'accounts:perfil' %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

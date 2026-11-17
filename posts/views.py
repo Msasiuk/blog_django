@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
 from .forms import PostForm
@@ -12,11 +13,11 @@ def inicio(request):
 
 def acerca(request):
     """Muestra la página 'Acerca de'."""
-    return render(request, 'posts/acerca.html')
+    return render(request, "posts/acerca.html")
 
 # ---------- CRUD de posts ----------
 def lista_posts(request):
-    """Muestra todos los posts publicados, del más nuevo al más viejo."""
+    """READ: muestra todos los posts publicados, del más nuevo al más viejo."""
     posts = Post.objects.filter(estado="publicado").order_by("-fecha_creacion")
     context = {
         "posts": posts
@@ -29,6 +30,7 @@ def detalle_post(request, pk):
     return render(request, "posts/detalle_post.html", {"post": post})
 
 
+@login_required
 def crear_post(request):
     """CREATE: muestra el formulario vacío (GET) o guarda el post nuevo (POST)."""
     if request.method == "POST":
@@ -37,7 +39,7 @@ def crear_post(request):
             post = form.save()
             return redirect("posts:detalle_post", pk=post.pk)
     else:
-        form = PostForm()
+        form = PostForm(initial={"autor": request.user.username})
 
     context = {
         "form": form,
@@ -46,7 +48,7 @@ def crear_post(request):
     }
     return render(request, "posts/post_form.html", context)
 
-
+@login_required
 def editar_post(request, pk):
     """UPDATE: muestra el formulario con los datos del post (GET) o guarda los cambios (POST)."""
     post = get_object_or_404(Post, pk=pk)
@@ -67,7 +69,7 @@ def editar_post(request, pk):
     }
     return render(request, "posts/post_form.html", context)
 
-
+@login_required
 def eliminar_post(request, pk):
     """DELETE: pide confirmación (GET) y borra el post (POST)."""
     post = get_object_or_404(Post, pk=pk)

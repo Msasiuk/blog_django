@@ -190,3 +190,92 @@ a {
     list-style: none;
     padding: 0;
 }
+
+/* ----- Menú con usuario ----- */
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.form-logout {
+    display: inline;
+    margin: 0 0 0 20px;
+}
+
+.form-logout button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1em;
+    font-family: inherit;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-logout button:hover {
+    background-color: #e74c3c;
+}
+
+.saludo {
+    margin-left: 20px;
+    color: #1abc9c;
+    font-style: italic;
+}
+
+/* ----- Perfil ----- */
+.perfil {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.avatar-vacio {
+    background-color: #1abc9c;
+    color: #ffffff;
+    font-size: 3em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formulario-angosto {
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.aviso {
+    background-color: #fdf2e9;
+    border-left: 4px solid #f39c12;
+    padding: 10px 15px;
+}
+
+.helptext {
+    display: block;
+    color: #777777;
+    font-size: 0.85em;
+}
+
+.formulario input[type="password"],
+.formulario input[type="email"],
+.formulario input[type="url"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1em;
+    box-sizing: border-box;
+}

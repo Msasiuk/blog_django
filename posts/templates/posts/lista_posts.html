@@ -5,7 +5,9 @@
 {% block content %}
 <div class="encabezado-lista">
     <h2>Publicaciones</h2>
+    {% if user.is_authenticated %}
     <a href="{% url 'posts:crear_post' %}" class="boton">+ Nuevo post</a>
+    {% endif %}
 </div>
 
 {% for post in posts %}
